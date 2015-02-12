@@ -1,23 +1,29 @@
-require 'sinatra'
+require 'sinatra/base'
 
-get '/' do
-	"O Hai"	
-end
+class InterviewServer < Sinatra::Base
 
-get '/:value' do 
-	get_response "#{params[:value]}"
-end
+  get '/:value' do 
+    get_response "#{params[:value]}"
+  end
 
-post '/addUser/:params' do
-	unless "#{params[:params]}" == "success"
-		status 400 
-		return "Error"
-	else
-		status 200
-		return "#{params[:params]}"
+  post '/test_error_code/:params' do
+    unless "#{params[:params]}" == "success"
+      status 400 
+      return "Error"
+    else
+      status 200
+      return "#{params[:params]}"
 	end
-end
+  end
 
-def get_response (value)
-	return "You sent " << value
+  def returnConnectedRepsonse = lambda do
+    return "{'connected': true}"
+  end
+
+  get '/test', &returnConnectedResponse
+
+  def get_response (value)
+    return "You sent " << value
+  end
+
 end
