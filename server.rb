@@ -2,11 +2,13 @@ require 'sinatra/base'
 
 class InterviewServer < Sinatra::Base
 
-  get '/:value' do 
-    get_response "#{params[:value]}"
-  end
+  # get '/:value' do 
+  #   get_response "#{params[:value]}"
+  # end
 
-  post '/test_error_code/:params' do
+  # post '/test_error_code/:params' 
+
+  testError = lambda do
     unless "#{params[:params]}" == "success"
       status 400 
       return "Error"
@@ -16,14 +18,15 @@ class InterviewServer < Sinatra::Base
 	end
   end
 
-  def returnConnectedRepsonse = lambda do
-    return "{'connected': true}"
+  returnConnectedResponse = lambda do
+    return "true"
   end
 
   get '/test', &returnConnectedResponse
+  post '/test_error_code/:params', &testError
 
-  def get_response (value)
-    return "You sent " << value
-  end
+  # def get_response (value)
+  #   return "You sent " << value
+  # end
 
 end
