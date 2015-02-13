@@ -1,6 +1,9 @@
 require 'sinatra/base'
+require 'erb'
 
 class InterviewServer < Sinatra::Base
+
+	set :port, 9000
 
   testError = lambda do
     unless "#{params[:params]}" == "success"
@@ -15,6 +18,11 @@ class InterviewServer < Sinatra::Base
   returnConnectedResponse = lambda do
     return "true"
   end
+
+get '/' do
+	@test = "hai"
+	erb :index
+end
 
   get '/test', &returnConnectedResponse
   post '/test_error_code/:params', &testError
