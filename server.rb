@@ -3,8 +3,6 @@ require 'erb'
 
 class InterviewServer < Sinatra::Base
 
-	set :port, 9000
-
   testError = lambda do
     unless "#{params[:params]}" == "success"
       status 400 
@@ -19,8 +17,8 @@ class InterviewServer < Sinatra::Base
     return "true"
   end
 
-get '/' do
-	@test = "hai"
+get '/name/:name' do
+	@test = "#{params[:name]}"
 	erb :index
 end
 
