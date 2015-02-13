@@ -3,6 +3,9 @@ require 'erb'
 
 class InterviewServer < Sinatra::Base
 
+	set :bind, '0.0.0.0'
+	set :sessions, true
+
   testError = lambda do
     unless "#{params[:params]}" == "success"
       status 400 
