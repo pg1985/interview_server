@@ -1,31 +1,60 @@
 require 'sinatra/base'
-require 'erb'
+require 'mongo'
+require 'json/ext'
 
 class InterviewServer < Sinatra::Base
 
-	set :bind, '0.0.0.0'
+  include Mongo
+
 	set :sessions, true
 
-  testError = lambda do
-    unless "#{params[:params]}" == "success"
-      status 400 
-      return "Error"
-    else
-      status 200
-      return "#{params[:params]}"
-	end
+  configure do
+    db = Mongo::Connection.new("localhost", 27017).db("todo")
+    coll = db["post"]
   end
 
-  returnConnectedResponse = lambda do
-    return "true"
+  createPost = lambda do
+
   end
 
-get '/name/:name' do
-	@test = "#{params[:name]}"
-	erb :index
-end
+  deletePost = lambda do
 
-  get '/test', &returnConnectedResponse
-  post '/test_error_code/:params', &testError
+  end
+
+  updatePost = lambda do
+    content_type :json
+    id = object_id(params[:id])
+    settings.mongo_db['test'].update({:_id => id}, params)
+    document_by_id(id)
+  end
+
+  getPost = lambda do
+    content_type :json
+    document_by_id(params[:id])
+  end
+
+  findOne = lambda do
+    doc = coll.find_one()
+    return doc
+  end
+
+    #routes
+    post '/create/', &createPost
+    post '/delete/', &deletePost
+    post '/update/', &updatePost
+    get '/get/', &getPost
+    get '/findone/' & findOne
+
+  helpers do
+    def object_id val
+      BSON::ObjectId.from_string(val)
+    end
+
+    def document_by_id id
+      id = object_id(id) if String === id
+      settings.mongo_db['test'].
+        find_one(:_id => id).to_json
+    end
+  end
 
 end
